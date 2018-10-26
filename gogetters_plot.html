@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="mrkhrhs Twitter：@muraki_ng" />
+  <title>意識高い系ヴィジュアライズのすすめ ～ggplot for go-getter’s plot～</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="gogetters_plot_files/reveal.js-3.3.0.1/css/reveal.css"/>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; } /* Keyword */
+code > span.dt { color: #dfdfbf; } /* DataType */
+code > span.dv { color: #dcdccc; } /* DecVal */
+code > span.bn { color: #dca3a3; } /* BaseN */
+code > span.fl { color: #c0bed1; } /* Float */
+code > span.ch { color: #dca3a3; } /* Char */
+code > span.st { color: #cc9393; } /* String */
+code > span.co { color: #7f9f7f; } /* Comment */
+code > span.ot { color: #efef8f; } /* Other */
+code > span.al { color: #ffcfaf; } /* Alert */
+code > span.fu { color: #efef8f; } /* Function */
+code > span.er { color: #c3bf9f; } /* Error */
+code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code > span.sc { color: #dca3a3; } /* SpecialChar */
+code > span.vs { color: #cc9393; } /* VerbatimString */
+code > span.ss { color: #cc9393; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #f0dfaf; } /* ControlFlow */
+code > span.op { color: #f0efd0; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #7f9f7f; } /* Documentation */
+code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+</style>
+
+<link rel="stylesheet" href="gogetters_plot_files/reveal.js-3.3.0.1/css/theme/serif.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal .slide-menu-button {
+      left: 105px !important;
+    }
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <link rel="stylesheet" href="for-revealjs.css"/>
+
+<!-- Printing and PDF exports -->
+<script id="paper-css" type="application/dynamic-css">
+
+/* Default Print Stylesheet Template
+   by Rob Glazebrook of CSSnewbie.com
+   Last Updated: June 4, 2008
+
+   Feel free (nay, compelled) to edit, append, and
+   manipulate this file as you see fit. */
+
+
+@media print {
+
+	/* SECTION 1: Set default width, margin, float, and
+	   background. This prevents elements from extending
+	   beyond the edge of the printed page, and prevents
+	   unnecessary background images from printing */
+	html {
+		background: #fff;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+	body {
+		background: #fff;
+		font-size: 20pt;
+		width: auto;
+		height: auto;
+		border: 0;
+		margin: 0 5%;
+		padding: 0;
+		overflow: visible;
+		float: none !important;
+	}
+
+	/* SECTION 2: Remove any elements not needed in print.
+	   This would include navigation, ads, sidebars, etc. */
+	.nestedarrow,
+	.controls,
+	.fork-reveal,
+	.share-reveal,
+	.state-background,
+	.reveal .progress,
+	.reveal .backgrounds {
+		display: none !important;
+	}
+
+	/* SECTION 3: Set body font face, size, and color.
+	   Consider using a serif font for readability. */
+	body, p, td, li, div {
+		font-size: 20pt!important;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		color: #000;
+	}
+
+	/* SECTION 4: Set heading font face, sizes, and color.
+	   Differentiate your headings from your body text.
+	   Perhaps use a large sans-serif for distinction. */
+	h1,h2,h3,h4,h5,h6 {
+		color: #000!important;
+		height: auto;
+		line-height: normal;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		text-shadow: 0 0 0 #000 !important;
+		text-align: left;
+		letter-spacing: normal;
+	}
+	/* Need to reduce the size of the fonts for printing */
+	h1 { font-size: 28pt !important;  }
+	h2 { font-size: 24pt !important; }
+	h3 { font-size: 22pt !important; }
+	h4 { font-size: 22pt !important; font-variant: small-caps; }
+	h5 { font-size: 21pt !important; }
+	h6 { font-size: 20pt !important; font-style: italic; }
+
+	/* SECTION 5: Make hyperlinks more usable.
+	   Ensure links are underlined, and consider appending
+	   the URL to the end of the link for usability. */
+	a:link,
+	a:visited {
+		color: #000 !important;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	/*
+	.reveal a:link:after,
+	.reveal a:visited:after {
+		content: " (" attr(href) ") ";
+		color: #222 !important;
+		font-size: 90%;
+	}
+	*/
+
+
+	/* SECTION 6: more reveal.js specific additions by @skypanther */
+	ul, ol, div, p {
+		visibility: visible;
+		position: static;
+		width: auto;
+		height: auto;
+		display: block;
+		overflow: visible;
+		margin: 0;
+		text-align: left !important;
+	}
+	.reveal pre,
+	.reveal table {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.reveal pre code {
+		padding: 20px;
+		border: 1px solid #ddd;
+	}
+	.reveal blockquote {
+		margin: 20px 0;
+	}
+	.reveal .slides {
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 0 !important;
+		zoom: 1 !important;
+
+		overflow: visible !important;
+		display: block !important;
+
+		text-align: left !important;
+		-webkit-perspective: none;
+		   -moz-perspective: none;
+		    -ms-perspective: none;
+		        perspective: none;
+
+		-webkit-perspective-origin: 50% 50%;
+		   -moz-perspective-origin: 50% 50%;
+		    -ms-perspective-origin: 50% 50%;
+		        perspective-origin: 50% 50%;
+	}
+	.reveal .slides section {
+		visibility: visible !important;
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+		display: block !important;
+		overflow: visible !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 60px 20px !important;
+		z-index: auto !important;
+
+		opacity: 1 !important;
+
+		page-break-after: always !important;
+
+		-webkit-transform-style: flat !important;
+		   -moz-transform-style: flat !important;
+		    -ms-transform-style: flat !important;
+		        transform-style: flat !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+
+		-webkit-transition: none !important;
+		   -moz-transition: none !important;
+		    -ms-transition: none !important;
+		        transition: none !important;
+	}
+	.reveal .slides section.stack {
+		padding: 0 !important;
+	}
+	.reveal section:last-of-type {
+		page-break-after: avoid !important;
+	}
+	.reveal section .fragment {
+		opacity: 1 !important;
+		visibility: visible !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+	}
+	.reveal section img {
+		display: block;
+		margin: 15px 0px;
+		background: rgba(255,255,255,1);
+		border: 1px solid #666;
+		box-shadow: none;
+	}
+
+	.reveal section small {
+		font-size: 0.8em;
+	}
+
+}  
+</script>
+
+
+<script id="pdf-css" type="application/dynamic-css">
+    
+/**
+ * This stylesheet is used to print reveal.js
+ * presentations to PDF.
+ *
+ * https://github.com/hakimel/reveal.js#pdf-export
+ */
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+
+body {
+	margin: 0 auto !important;
+	border: 0;
+	padding: 0;
+	float: none !important;
+	overflow: visible;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+/* Remove any elements not needed in print. */
+.nestedarrow,
+.reveal .controls,
+.reveal .progress,
+.reveal .playback,
+.reveal.overview,
+.fork-reveal,
+.share-reveal,
+.state-background {
+	display: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-shadow: 0 0 0 #000 !important;
+}
+
+.reveal pre code {
+	overflow: hidden !important;
+	font-family: Courier, 'Courier New', monospace !important;
+}
+
+ul, ol, div, p {
+	visibility: visible;
+	position: static;
+	width: auto;
+	height: auto;
+	display: block;
+	overflow: visible;
+	margin: auto;
+}
+.reveal {
+	width: auto !important;
+	height: auto !important;
+	overflow: hidden !important;
+}
+.reveal .slides {
+	position: static;
+	width: 100%;
+	height: auto;
+
+	left: auto;
+	top: auto;
+	margin: 0 !important;
+	padding: 0 !important;
+
+	overflow: visible;
+	display: block;
+
+	-webkit-perspective: none;
+	   -moz-perspective: none;
+	    -ms-perspective: none;
+	        perspective: none;
+
+	-webkit-perspective-origin: 50% 50%; /* there isn't a none/auto value but 50-50 is the default */
+	   -moz-perspective-origin: 50% 50%;
+	    -ms-perspective-origin: 50% 50%;
+	        perspective-origin: 50% 50%;
+}
+
+.reveal .slides section {
+	page-break-after: always !important;
+
+	visibility: visible !important;
+	position: relative !important;
+	display: block !important;
+	position: relative !important;
+
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	min-height: 1px;
+
+	opacity: 1 !important;
+
+	-webkit-transform-style: flat !important;
+	   -moz-transform-style: flat !important;
+	    -ms-transform-style: flat !important;
+	        transform-style: flat !important;
+
+	-webkit-transform: none !important;
+	   -moz-transform: none !important;
+	    -ms-transform: none !important;
+	        transform: none !important;
+}
+
+.reveal section.stack {
+	margin: 0 !important;
+	padding: 0 !important;
+	page-break-after: avoid !important;
+	height: auto !important;
+	min-height: auto !important;
+}
+
+.reveal img {
+	box-shadow: none;
+}
+
+.reveal .roll {
+	overflow: visible;
+	line-height: 1em;
+}
+
+/* Slide backgrounds are placed inside of their slide when exporting to PDF */
+.reveal section .slide-background {
+	display: block !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+/* All elements should be above the slide-background */
+.reveal section>* {
+	position: relative;
+	z-index: 1;
+}
+
+/* Display slide speaker notes when 'showNotes' is enabled */
+.reveal .speaker-notes-pdf {
+	display: block;
+	width: 100%;
+	max-height: none;
+	left: auto;
+	top: auto;
+	z-index: 100;
+}
+
+/* Display slide numbers when 'slideNumber' is enabled */
+.reveal .slide-number-pdf {
+	display: block;
+	position: absolute;
+	font-size: 14px;
+}
+
+</script>
+
+
+<script>
+var style = document.createElement( 'style' );
+style.type = 'text/css';
+var style_script_id = window.location.search.match( /print-pdf/gi ) ? 'pdf-css' : 'paper-css';
+var style_script = document.getElementById(style_script_id).text;
+style.innerHTML = style_script;
+document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    <link href="gogetters_plot_files/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">意識高い系<font color = #018227><b>ヴィジュアライズ</b></font>のすすめ<br>～ggplot for <b><font color = #018227>g</font></b>o-<b><font color = #018227>g</font></b>etter’s <font color = #018227>plot</font>～</h1>
+    <h2 class="author">mrkhrhs<br>Twitter：<span class="citation" data-cites="muraki_ng">@muraki_ng</span></h2>
+    <h3 class="date">2018.10.20</h3>
+</section>
+
+<section><section id="whos-this-ossan-だれだこのおっさんは" class="titleslide slide level1"><h1>who’s this OSSAN<br>（だれだこのおっさんは）</h1></section><section id="自己紹介" class="slide level2">
+<h2>自己紹介</h2>
+<div class="column1">
+<p><img src="img/shoukai_test.png" width="300"></p>
+</div>
+<div class="column2">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">名前</th>
+<th style="text-align: left;">mrk　hrhs<br>（<span class="citation" data-cites="muraki_ng">@muraki_ng</span>）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">年齢</td>
+<td style="text-align: left;">３６歳<br>（統計上正真正銘のおっさん）</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">所属</td>
+<td style="text-align: left;">F0層向け機械の製造を主力事業とする某エンタメ企業</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">職種</td>
+<td style="text-align: left;">マーケティングリサーチャー（自称）</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">仕事</td>
+<td style="text-align: left;">アンケートやIoTデータで<br>事業部に横からふんわりと<br>ツッコミを入れる係</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>Rおじさんになることを夢見るおっさん</li>
+<li>言うことは総じて残念です。ご承知おきください。
+<aside class="notes">
+ノートだよ！
+</aside></li>
+</ul>
+</section></section>
+<section><section id="今日言いたいこと" class="titleslide slide level1"><h1>今日言いたいこと</h1></section><section id="これだけ" class="slide level2">
+<h2>これだけ</h2>
+<ul>
+<li>分析は相互行為（平たくいえばコミュニケーション）</li>
+<li>相手に伝えることは可視化で</li>
+<li>いま、知識も実力も経験も持っていないなら、<br>多少のゲタくらい履いとこう</li>
+<li>ggplotには<br> 深い統計的知識も<br> 強力なエンジニアリングスキルも<br> 豊富なビジネス経験も　　　　　　　<b>すべて不要</b></li>
+<li>つまり<font color = blue>無限の可能性！</font></li>
+</ul>
+<aside class="notes">
+ノートだよ！
+</aside>
+</section></section>
+<section><section id="意識高い系グラフでチームの-パフォーマンスをパワフルに-モチベートするのはアグリーでfix" class="titleslide slide level1"><h1>意識高い系グラフでチームの<br>パフォーマンスをパワフルに<br>モチベートするのはアグリーでFIX！</h1></section><section id="はい" class="slide level2">
+<h2>…はい？</h2>
+<ul>
+<li>事業部は事業内のフレームに囚われがち（文化、とも）</li>
+<li>組織がハンパに大きくなってくると、<br>（時として<b><font color=red>無駄にもなる…</font></b>）数字が求められる</li>
+<li>数字に対するリテラシーは人によってアレ
+<ul>
+<li>そんなことで無駄な対立を生むの、もうやめよう？</li>
+</ul></li>
+</ul>
+<p>→<font color = "blue", size = 15>可視化、</font>ダイジ！</p>
+<aside class="notes">
+ノートなんだよ！
+</aside>
+</section><section id="改めて可視化とは何か" class="slide level2">
+<h2>改めて、「可視化」とは何か？</h2>
+<h3 id="見たいものにフォーカスを当てること">→「見たいもの」にフォーカスを当てること</h3>
+<p>利用者が、<br>生データを読むよりも圧倒的に早く＆適切に、<br> 現状を認識できて、次のアクションの検討が出来ること</p>
+<aside class="notes">
+ついでにいうとノートに書いていたことはすべて消しましたよ！
+</aside>
+</section><section id="見たいものとは何か" class="slide level2">
+<h2>見たいものとは何か？</h2>
+<ul>
+<li><p>（雑駁に）「事業推進」なら<br> 「どこに投資する／しないか が決めやすい情報」<br> 　┗役職（というか見ているシゴトの範疇）<br> 　によって、どんな粒度で見たいかは変わる</p></li>
+<li><p>分析者-意思決定者の間ではしばしば、<br> 「こまけぇこたぁいいんだよ!!」なやり取りになりがち</p></li>
+</ul>
+<aside class="notes">
+でもこのノート機能はスピーカーには使いやすいですね。
+</aside>
+</section><section id="ならば分析者がやるべきは" class="slide level2">
+<h2>ならば分析者がやるべきは</h2>
+<p><br><br> 細かいことは抜きにして、読み手が</p>
+<h4 id="パッと分かるグラフ-を作る">「パッと分かるグラフ」<br>　　　　　　を作る！</h4>
+<aside class="notes">
+これ、Ctrl＋Sでスピーカーモードになるので、それで見られます。
+</aside>
+</section><section id="パッと分かる要件" class="slide level2">
+<h2>「パッと分かる」要件</h2>
+<ul>
+<li>言いたいことがすぐ理解出来る</li>
+<li>ロジカルっぽい（←「っぽい」）</li>
+<li>「so, what？」に答えられる<br>（取りうるアクションの選択肢が用意されている）<br />
+┗ビジネスにとって都合の良いこと、悪いことなど包み隠さず中立な発言<br>┗ヨイショやディスりだけでは終わらない</li>
+</ul>
+<aside class="notes">
+まぁこの汚いソースを見ないとこのスピーカーモードになるやり方はこのスライド本体からは分からないわけで。
+</aside>
+</section><section id="これらをキチンとやるには" class="slide level2">
+<h2>これらをキチンとやるには？</h2>
+<p>「ビジネスドメイン知識」 <br> 　┗綿密なコミュニケーション（そんな時間は大体無い）<br> 　┗データリテラシー、大体の組織内の人が同じくらいタリテルラシー</p>
+<aside class="notes">
+ともかくスピーカーモードはいいぞ
+</aside>
+</section><section id="そんなん大体無理" class="slide level2">
+<h2><br><br><br>そんなん大体無理＼(^^)／</h2>
+</section><section id="cor1" class="slide level2">
+<h2>相関 is 何（これを読んでいる皆様）</h2>
+<p><img src="gogetters_plot_files/figure-revealjs/unnamed-chunk-2-1.png" width="768" /></p>
+</section><section id="cor2" class="slide level2">
+<h2>相関 is 何（その他の皆様）</h2>
+<p><img src="img/oisinbo.jpg" alt="oisinbo" /></p>
+<p><a href="https://creatorsbank.com/osuzudesign/works/114597">参考：おいしんぼ相関図</a></p>
+</section><section id="ではどうするか" class="slide level2">
+<h2>ではどうするか？</h2>
+<h4 id="意識高い系ビジュアライズ">意識高い系ビジュアライズ！</h4>
+<aside class="notes">
+ノートだよ！（再）
+</aside>
+</section></section>
+<section><section id="意識高い系-ビジュアライズとは" class="titleslide slide level1"><h1>意識高い系<br>ビジュアライズとは？</h1></section><section id="コレが意識高い系ビジュアライズだ言ってみた" class="slide level2">
+<h2>コレが意識高い系ビジュアライズだ（言ってみた）</h2>
+<ul>
+<li>「意識高い系概念」のフレームワークに沿った可視化</li>
+<li>「相手の意識＝高い」ケース
+<ul>
+<li>「あぁ、あのフレームワークね」</li>
+</ul></li>
+</ul>
+<h3 id="理解度信頼度爆上がりを期待したい">⇒理解度＆信頼度爆上がり（を期待したい）</h3>
+<ul>
+<li>「相手の意識＝低い」ケース
+<ul>
+<li>「なんかすごそう…」</li>
+</ul></li>
+</ul>
+<h3 id="フレームワークは事象の整理簡略化なので-いずれにしても理解されやすい-冷や汗">⇒フレームワークは事象の整理・簡略化なので<br>いずれにしても理解されやすい！<br>（冷や汗）</h3>
+<aside class="notes">
+ノートだよ！（再々）
+</aside>
+</section></section>
+<section><section id="意識高い系-ビジュアライズ見本" class="titleslide slide level1"><h1>意識高い系<br>ビジュアライズ見本</h1></section><section id="一例をご紹介" class="slide level2">
+<h2>一例をご紹介</h2>
+<h3 id="本日はその中でも-とりあえずできた-選りすぐりのつをご紹介">本日はその中でも<br> <del>とりあえずできた</del> 選りすぐりの３つをご紹介☆</h3>
+<aside class="notes">
+・・・。
+</aside>
+</section><section id="そのppmgeom_point" class="slide level2">
+<h2>その１：PPM（geom_point）</h2>
+<p>ただの散布図？いいえ、<font color=green><b>「ＰＰＭ」</b></font>です！</p>
+<p><img src="gogetters_plot_files/figure-revealjs/plot_ppm-1.png" width="768" /></p>
+</section><section id="そのppmポイント" class="slide level2">
+<h2>その１：PPM（ポイント）</h2>
+<ul>
+<li>ええ、ただのバブルチャートです</li>
+<li>「どこに投資すべきか」を判断するのに使います<br><a href="https://blog.kairosmarketing.net/marketing-strategy/product-portfolio-management-140717/">（参考：ＰＰＭ）</a></li>
+<li>geom_pointとgeom_text、それにanotate等で装飾</li>
+<li>ggthemeを使ってさらにオサレに</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">enu &lt;-<span class="st"> </span><span class="dv">10</span>
+dat1 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">abs</span>(<span class="kw">round</span>(<span class="kw">rnorm</span>(<span class="dt">n =</span> enu, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">25</span>), <span class="dt">digits =</span> <span class="dv">1</span>)),
+                   <span class="dt">y =</span> <span class="kw">abs</span>(<span class="kw">round</span>(<span class="kw">rnorm</span>(<span class="dt">n =</span> enu, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">25</span>), <span class="dt">digits =</span> <span class="dv">1</span>)),
+                   <span class="dt">z =</span> <span class="kw">abs</span>(<span class="kw">round</span>(<span class="kw">rnorm</span>(<span class="dt">n =</span> enu, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">30</span>), <span class="dt">digits =</span> <span class="dv">1</span>)),
+                   <span class="dt">a =</span> letters[<span class="dv">1</span><span class="op">:</span>enu],
+                   <span class="dt">b =</span> <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, <span class="dt">size =</span> enu) <span class="op">*</span><span class="st"> </span><span class="dv">1000</span>)
+
+dat1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, y, <span class="dt">colour =</span> a, <span class="dt">alpha =</span> <span class="fl">0.5</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">y =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">hjust =</span> <span class="op">-</span><span class="fl">0.5</span>, <span class="dt">vjust =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">colour =</span><span class="st">&quot;gray20&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;負け犬&quot;</span>, <span class="dt">size =</span> <span class="dv">10</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="ot">Inf</span>,  <span class="dt">y =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">hjust =</span> <span class="fl">1.0</span>,  <span class="dt">vjust =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">colour =</span><span class="st">&quot;goldenrod3&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;金のなる木&quot;</span>, <span class="dt">size =</span> <span class="dv">10</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">y =</span> <span class="ot">Inf</span>,  <span class="dt">hjust =</span> <span class="op">-</span><span class="fl">0.5</span>, <span class="dt">vjust =</span> <span class="fl">1.5</span>,  <span class="dt">colour =</span><span class="st">&quot;red&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;問題児&quot;</span>, <span class="dt">size =</span> <span class="dv">10</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="ot">Inf</span>,  <span class="dt">y =</span> <span class="ot">Inf</span>,  <span class="dt">hjust =</span> <span class="fl">1.5</span>,  <span class="dt">vjust =</span> <span class="fl">1.5</span>,  <span class="dt">colour =</span><span class="st">&quot;blue&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;花形&quot;</span>, <span class="dt">size =</span> <span class="dv">10</span>)<span class="op">+</span><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">50</span>, <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">50</span>, <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> z))<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> a),<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_size_area</span>(<span class="dt">max_size =</span> <span class="dv">30</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;市場シェア&quot;</span>)<span class="op">+</span><span class="kw">ylab</span>(<span class="st">&quot;成長性（期待）&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="dv">0</span>, <span class="dv">100</span>)<span class="op">+</span><span class="kw">ylim</span>(<span class="dv">0</span>,<span class="dv">100</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;プロダクト・ポートフォリオ&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_pander</span>()</code></pre></div>
+</section><section id="そのppm応用" class="slide level2">
+<h2>その１：PPM（応用）</h2>
+<p>geom_pathで経過を追う</p>
+<p><img src="gogetters_plot_files/figure-revealjs/plot_ppm_path-1.png" width="768" /></p>
+<aside class="notes">
+実際問題こういう風な使い方ってどの程度されてるのかほかの会社さんとか知らない。。。
+</aside>
+</section><section id="そのppm応用ポイント" class="slide level2">
+<h2>その１：PPM（応用：ポイント）</h2>
+<ul>
+<li>geom_pathを使って製品・サービスの成長～衰退過程を追うことも</li>
+<li>今の位置をベースに提言
+<ul>
+<li>「もっとシェア獲得のために～」とか</li>
+<li>「優良顧客を増やすために～」とか</li>
+</ul></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 渦巻きmocデータ書けなかった…</span>
+dat1_circle &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">80</span>, <span class="dv">50</span>),
+                          <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">60</span>, <span class="dv">80</span>, <span class="dv">70</span>, <span class="dv">30</span>, <span class="dv">25</span>),
+                          <span class="dt">z =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">100</span>, <span class="dv">70</span>, <span class="dv">50</span>),
+                          <span class="dt">a =</span> letters[<span class="dv">1</span>]
+                          ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">cum_z =</span> <span class="kw">cumsum</span>(z))
+
+<span class="co"># PPMの経路を可視化</span>
+dat1_circle <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, y, <span class="dt">alpha =</span> <span class="fl">0.5</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">y =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">hjust =</span> <span class="op">-</span><span class="fl">0.5</span>, <span class="dt">vjust =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">colour =</span><span class="st">&quot;gray20&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;負け犬&quot;</span>, <span class="dt">size =</span> <span class="dv">10</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="ot">Inf</span>,  <span class="dt">y =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">hjust =</span> <span class="fl">1.0</span>,  <span class="dt">vjust =</span> <span class="op">-</span><span class="dv">1</span>, <span class="dt">colour =</span><span class="st">&quot;goldenrod3&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;金のなる木&quot;</span>, <span class="dt">size =</span> <span class="dv">10</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">y =</span> <span class="ot">Inf</span>,  <span class="dt">hjust =</span> <span class="op">-</span><span class="fl">0.5</span>, <span class="dt">vjust =</span> <span class="fl">1.5</span>,  <span class="dt">colour =</span><span class="st">&quot;red&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;問題児&quot;</span>, <span class="dt">size =</span> <span class="dv">10</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="ot">Inf</span>,  <span class="dt">y =</span> <span class="ot">Inf</span>,  <span class="dt">hjust =</span> <span class="fl">1.5</span>,  <span class="dt">vjust =</span> <span class="fl">1.5</span>,  <span class="dt">colour =</span><span class="st">&quot;blue&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;花形&quot;</span>, <span class="dt">size =</span> <span class="dv">10</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">50</span>, <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">50</span>, <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_path</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> z), <span class="dt">colour =</span> <span class="st">&quot;skyblue&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> cum_z),<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_size_area</span>(<span class="dt">max_size =</span> <span class="dv">30</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;市場シェア&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;成長性（期待）&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="dv">0</span>, <span class="dv">100</span>)<span class="op">+</span><span class="kw">ylim</span>(<span class="dv">0</span>,<span class="dv">100</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;プロダクト・ポートフォリオ&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_pander</span>()</code></pre></div>
+<aside class="notes">
+</aside>
+</section><section id="poji1" class="slide level2">
+<h2>その２：ポジショニングマップ</h2>
+<p>製品群のまとまりを示します。※↓こういうの <img src="img/pmapgrande.jpg" alt="いも。" /> 出典は：<a href="https://www.japanpotato.co.jp/varieties/positioning/">こちら</a></p>
+</section><section id="poji2" class="slide level2">
+<h2>その２：ポジショニングマップ</h2>
+<p>（雰囲気で）統計的に分析するなら</p>
+<ul>
+<li>コレポン</li>
+<li>主成分</li>
+<li>ＭＤＳ</li>
+</ul>
+<p>などなど、色々考えられますが、<br> これら（の名前は）<font color = red><b>使用禁止</b></font>。</p>
+<aside class="notes">
+<p>説明するならこうです。 「ポジショニングを」 「統計的に」 「ヴィジュアライズしました（ｷﾘｯ）」</p>
+「ビ」？いいえ、「ヴぃ」です。
+</aside>
+</section><section id="ggplotでやるならこう" class="slide level2">
+<h2>ggplotでやるならこう</h2>
+<p><img src="gogetters_plot_files/figure-revealjs/plot_positioning-1.png" width="768" /></p>
+</section><section id="そのポイント" class="slide level2">
+<h2>その２：ポイント</h2>
+<ul>
+<li>多くの人が多次元なことを考えるけど、<br>次元を分解できないことがしばしば
+<ul>
+<li>次元を分解してあげましょう</li>
+</ul></li>
+<li>次元をまとめる手法は色々ありますが、<br>手法としての問題以前に、まず理解されない
+<ul>
+<li>でも手法の妥当性を聞かれるとかもうほんと（ry</li>
+</ul></li>
+<li>それ以前に割と「散布図」って理解されにくい
+<ul>
+<li>「範囲」で示すと（なぜか）理解されたりします</li>
+<li>そのために時には強引な処理もやるよ、と。</li>
+</ul></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#このサンプルデータの作りがイケてないんですよね。。。</span>
+df1 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">hiduke =</span> <span class="kw">ymd</span>(<span class="st">&quot;2015-01-01&quot;</span>) <span class="op">%m+%</span><span class="st"> </span><span class="kw">months</span>(<span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">36</span>)),
+  <span class="dt">product1 =</span> <span class="kw">abs</span>(<span class="kw">cumsum</span>(<span class="kw">rnorm</span>(<span class="dv">37</span>, <span class="dv">1</span>, <span class="dv">1</span>)<span class="op">*</span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">150</span>), <span class="dv">1</span>))),
+  <span class="dt">product2 =</span> <span class="kw">abs</span>(<span class="kw">cumsum</span>(<span class="kw">rnorm</span>(<span class="dv">37</span>, <span class="dv">0</span>, <span class="dv">1</span>)<span class="op">*</span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">150</span>), <span class="dv">1</span>))),
+  <span class="dt">product3 =</span> <span class="kw">abs</span>(<span class="kw">cumsum</span>(<span class="kw">rnorm</span>(<span class="dv">37</span>, <span class="dv">0</span>, <span class="dv">2</span>)<span class="op">*</span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">150</span>), <span class="dv">1</span>))),
+  <span class="dt">product4 =</span> <span class="kw">abs</span>(<span class="kw">cumsum</span>(<span class="kw">rnorm</span>(<span class="dv">37</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>)<span class="op">*</span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">150</span>), <span class="dv">1</span>)))
+  ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(product, val1, <span class="op">-</span>hiduke) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">val2 =</span> <span class="kw">cumsum</span>(<span class="kw">round</span>(val1 <span class="op">*</span><span class="st"> </span><span class="kw">abs</span>(<span class="kw">rnorm</span>(<span class="dv">37</span>,<span class="dv">3</span>,<span class="dv">5</span>)), <span class="dt">digits =</span> <span class="dv">0</span>)))
+
+plot_df1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df1, <span class="kw">aes</span>(val1, val2, <span class="dt">colour =</span> product)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_path</span>()　<span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
+
+df2 &lt;-<span class="st"> </span>df1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(product) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise_if</span>(is.numeric, <span class="kw">funs</span>(min, max))
+
+plot_df2 &lt;-<span class="st"> </span>
+<span class="kw">ggplot</span>(df2, <span class="kw">aes</span>(<span class="dt">xmin =</span> val1_min, <span class="dt">xmax =</span> val1_min <span class="op">+</span><span class="st"> </span>val1_max,
+                <span class="dt">ymin =</span> val2_min, <span class="dt">ymax =</span> val2_min <span class="op">+</span><span class="st"> </span>val2_max, 
+                <span class="dt">fill =</span> product, <span class="dt">colour =</span> product))<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_rect</span>(<span class="dt">alpha =</span> .<span class="dv">1</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x=</span>val1_min <span class="op">+</span><span class="st"> </span>val1_max<span class="op">/</span><span class="dv">2</span>, <span class="dt">y=</span>val2_min <span class="op">+</span><span class="st"> </span>val2_max<span class="op">/</span><span class="dv">2</span>, <span class="dt">label =</span> product))<span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;val1&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;val2&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="kw">sum</span>(df2<span class="op">$</span>val1_min, df2<span class="op">$</span>val1_max)<span class="op">/</span><span class="dv">4</span>, <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">sum</span>(df2<span class="op">$</span>val2_min, df2<span class="op">$</span>val2_max)<span class="op">/</span><span class="dv">6</span>, <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_transparent</span>()
+
+plot_df2</code></pre></div>
+<aside class="notes">
+幣はさすがに最大最小はしませんでしたが、IQRでもういいんじゃね？的になりました（投げやり）
+</aside>
+</section><section id="その元はこんなデータ" class="slide level2">
+<h2>その２：元はこんなデータ</h2>
+<p>最小値と最大値をピックアップ。 <img src="gogetters_plot_files/figure-revealjs/unnamed-chunk-3-1.png" width="768" /></p>
+</section><section id="そのそして" class="slide level2">
+<h2>その３：そして…</h2>
+</section><section id="cor_plot1" class="slide level2">
+<h2>その３：「相関図」</h2>
+<p>思いつかなかったので相関図作ってみました <img src="gogetters_plot_files/figure-revealjs/plot_corererere-1.png" width="768" /></p>
+</section><section id="cor_plot2" class="slide level2">
+<h2>その３：「相関図」</h2>
+<p>意外とやること多くて面倒…<br />
+でもggimageはお手軽</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ヒト</span>
+soukan_dat_p &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">data.frame</span>(<span class="dt">name =</span> <span class="kw">c</span>(<span class="st">&quot;主人公&quot;</span>, <span class="st">&quot;ヒロイン&quot;</span>, <span class="st">&quot;親父&quot;</span>, <span class="st">&quot;ライバル&quot;</span>,
+                      <span class="st">&quot;元カノ&quot;</span>, <span class="st">&quot;三下&quot;</span>, <span class="st">&quot;序盤ボス&quot;</span>, <span class="st">&quot;謎の首領&quot;</span>, <span class="st">&quot;謎のＡ&quot;</span>, <span class="st">&quot;謎のＢ&quot;</span>, 
+                      <span class="st">&quot;どこかの人Ａ&quot;</span>, <span class="st">&quot;どこかの人Ｂ&quot;</span>, <span class="st">&quot;どこかの人Ｃ&quot;</span>),
+             <span class="dt">p_x =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">75</span>, <span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">80</span>, <span class="dv">72</span>, <span class="dv">88</span>, <span class="dv">58</span>, <span class="dv">75</span>, <span class="dv">92</span>),
+             <span class="dt">p_y =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">40</span>, <span class="dv">90</span>, <span class="dv">85</span>, <span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">80</span>, <span class="dv">95</span>, <span class="dv">95</span>, <span class="dv">15</span>, <span class="dv">15</span>, <span class="dv">15</span>),
+             <span class="dt">gender =</span> <span class="kw">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;F&quot;</span>),
+             <span class="dt">img =</span> <span class="kw">c</span>(<span class="st">&quot;https://4.bp.blogspot.com/-6nucQQvGF7M/WzC-BHQmAHI/AAAAAAABM90/mCILacrOAq8IqccOnH1U_umcAD56flJnQCLcBGAs/s400/yaruki_moeru_man.png&quot;</span>,
+                     <span class="st">&quot;https://3.bp.blogspot.com/-2GQCRtLUGJg/W2l4HEL5XyI/AAAAAAABN5E/MFUvBMVtTzQVIohDVbtyNohSNZSsBamJgCLcBGAs/s400/moesode_woman.png&quot;</span>,
+                     <span class="st">&quot;https://4.bp.blogspot.com/-DVrm-ZoqJsQ/V_4b9xmCr7I/AAAAAAAA-wg/glvaVXIbsiwTZxKrk9vC1dXHArD1k7edgCLcB/s400/yopparai_kaisya_office.png&quot;</span>,
+                     <span class="st">&quot;https://2.bp.blogspot.com/-865FYLWXajk/Wytgvg53qlI/AAAAAAABM1w/HycCfGtSd-wgRj20OOcCP5L5IIcDRK-TACLcBGAs/s450/tsundere_boy.png&quot;</span>,
+                     <span class="st">&quot;https://4.bp.blogspot.com/-hko-old-diQ/WdMyjmpC3SI/AAAAAAABHRw/JKqfmklVJDoXQCpdh_ZG-KvZJAfYN0KPwCLcBGAs/s470/kids_chuunibyou_girl.png&quot;</span>,
+                     <span class="st">&quot;https://4.bp.blogspot.com/-BtG1hmLlBao/VGLMdrI9ygI/AAAAAAAApA4/hccjxUgD_Uw/s400/ninja_bad.png&quot;</span>,
+                     <span class="st">&quot;https://1.bp.blogspot.com/-04NRuZbkNzw/Wufm_bksivI/AAAAAAABLwI/faEtIkyq8y8_4Wgtb7aXJ09tspbSuq19QCLcBGAs/s400/suteneko_hirou_furyou.png&quot;</span>,
+                     <span class="st">&quot;https://4.bp.blogspot.com/-VA_IOO7AQy4/VeJ-lBs7uwI/AAAAAAAAxH8/36QFYd58nRk/s450/money_yami_soshiki.png&quot;</span>,
+                     <span class="st">&quot;https://4.bp.blogspot.com/--WcbDAiKCLM/U-8FxLYXUxI/AAAAAAAAkx8/uF2u7PFSiUA/s400/warumono.png&quot;</span>,
+                     <span class="st">&quot;https://2.bp.blogspot.com/-wq-_o24WBZo/WBsAJCx364I/AAAAAAAA_Sk/pHHObu1yi9keYT6rXDDdpvE5TFwK9KeCgCLcB/s400/businesswoman8_niyari.png&quot;</span>,
+                     <span class="st">&quot;https://3.bp.blogspot.com/-tSd5PA6e7N4/W6DTGgww_FI/AAAAAAABO5Y/0HjYsilb3-k41PcWbW06Pat73twhNiq1wCLcBGAs/s400/cafe_macho_tenin.png&quot;</span>,
+                     <span class="st">&quot;https://1.bp.blogspot.com/-UxW-KveXEFE/WqiiaLYH4QI/AAAAAAABK6o/lMCp-EamIc0UseuPcpkaO4MS7TJaMdvEwCLcBGAs/s400/toy_tsumiki_girl.png&quot;</span>,
+                     <span class="st">&quot;https://4.bp.blogspot.com/-ky9zKCOMv7o/WlGpaJt9eVI/AAAAAAABJm4/3qjfM3w2S8ssEJjMbqzqlwaantLxfn_zgCLcBGAs/s450/job_illustrator_pc_woman_tetsuya.png&quot;</span>)　<span class="co">#いらすとやさんいつもお世話になってます</span>
+             )
+
+<span class="co"># シマ</span>
+soukan_dat_g &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">data.frame</span>(<span class="dt">g_xmin =</span> <span class="kw">c</span>(<span class="dv">35</span>,  <span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">65</span>),
+             <span class="dt">g_xmax =</span> <span class="kw">c</span>(<span class="dv">90</span>, <span class="dv">35</span>, <span class="dv">98</span>, <span class="dv">98</span>),
+             <span class="dt">g_ymin =</span> <span class="kw">c</span>(<span class="dv">35</span>,  <span class="dv">5</span>,  <span class="dv">5</span>, <span class="dv">72</span>),
+             <span class="dt">g_ymax =</span> <span class="kw">c</span>(<span class="dv">68</span>, <span class="dv">35</span>, <span class="dv">25</span>, <span class="dv">98</span>),
+             <span class="dt">name =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;序盤の悪役&quot;</span>, <span class="st">&quot;謎の組織&quot;</span>, <span class="st">&quot;どこかの人たち&quot;</span>))
+
+<span class="co"># 図示にはggimageを使ってます。これラクだなぁ。</span>
+<span class="kw">ggplot</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_rect</span>(<span class="dt">data =</span> soukan_dat_g, <span class="kw">aes</span>(<span class="dt">xmin =</span> g_xmin, <span class="dt">xmax =</span> g_xmax, 
+                                     <span class="dt">ymin =</span> g_ymin, <span class="dt">ymax =</span> g_ymax, 
+                                     <span class="dt">fill =</span> name, <span class="dt">alpha =</span> <span class="fl">0.8</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_image</span>(<span class="dt">data =</span> soukan_dat_p, <span class="kw">aes</span>(p_x, p_y, <span class="dt">image =</span> img),
+           <span class="dt">size =</span> .<span class="dv">15</span>, <span class="dt">na.rm =</span> <span class="ot">FALSE</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> soukan_dat_p, <span class="kw">aes</span>(p_x, p_y<span class="op">-</span><span class="dv">10</span>, <span class="dt">label =</span> name))<span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="op">+</span><span class="st"> </span><span class="co">#でもここからannotateの嵐…</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">55</span>, <span class="dt">xend =</span> <span class="dv">70</span>, <span class="dt">y=</span> <span class="dv">50</span>, <span class="dt">yend =</span> <span class="dv">60</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;deeppink&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">ends =</span> <span class="st">&quot;both&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">50</span>, <span class="dt">xend =</span> <span class="dv">50</span>, <span class="dt">y=</span> <span class="dv">60</span>, <span class="dt">yend =</span> <span class="dv">70</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;deeppink&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">ends =</span> <span class="st">&quot;both&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">80</span>, <span class="dt">xend =</span> <span class="dv">90</span>, <span class="dt">y=</span> <span class="dv">40</span>, <span class="dt">yend =</span> <span class="dv">25</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;deeppink&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>())<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">55</span>, <span class="dt">xend =</span> <span class="dv">68</span>, <span class="dt">y=</span> <span class="dv">45</span>, <span class="dt">yend =</span> <span class="dv">40</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;dodgerblue1&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">ends =</span> <span class="st">&quot;both&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">45</span>, <span class="dt">xend =</span> <span class="dv">15</span>, <span class="dt">y=</span> <span class="dv">55</span>, <span class="dt">yend =</span> <span class="dv">85</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;dodgerblue1&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">ends =</span> <span class="st">&quot;both&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">65</span>, <span class="dt">xend =</span> <span class="dv">55</span>, <span class="dt">y=</span> <span class="dv">80</span>, <span class="dt">yend =</span> <span class="dv">80</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>())<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">95</span>, <span class="dt">xend =</span> <span class="dv">95</span>, <span class="dt">y=</span> <span class="dv">72</span>, <span class="dt">yend =</span> <span class="dv">25</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>())<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">35</span>, <span class="dt">xend =</span> <span class="dv">25</span>, <span class="dt">y=</span> <span class="dv">50</span>, <span class="dt">yend =</span> <span class="dv">50</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">25</span>, <span class="dt">xend =</span> <span class="dv">25</span>, <span class="dt">y=</span> <span class="dv">50</span>, <span class="dt">yend =</span> <span class="dv">35</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>())<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">45</span>, <span class="dt">xend =</span> <span class="dv">45</span>, <span class="dt">y=</span> <span class="dv">15</span>, <span class="dt">yend =</span> <span class="dv">35</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;dodgerblue1&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>())<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;segment&quot;</span>,<span class="dt">x =</span> <span class="dv">45</span>, <span class="dt">xend =</span> <span class="dv">50</span>, <span class="dt">y=</span> <span class="dv">15</span>, <span class="dt">yend =</span> <span class="dv">15</span>, 
+           <span class="dt">colour=</span><span class="st">&quot;dodgerblue1&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>())<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">40</span>, <span class="dt">y =</span> <span class="dv">38</span>, <span class="dt">label =</span> <span class="st">&quot;秘密組織&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;blue&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">15</span>, <span class="dt">y =</span> <span class="dv">35</span>, <span class="dt">label =</span> <span class="st">&quot;チンピラ集団&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;blue&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">60</span>, <span class="dt">y =</span> <span class="dv">25</span>, <span class="dt">label =</span> <span class="st">&quot;その他の人たち&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;blue&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">95</span>, <span class="dt">y =</span> <span class="dv">75</span>, <span class="dt">label =</span> <span class="st">&quot;謎の組織&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;blue&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_map</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&#39;none&#39;</span>)</code></pre></div>
+</section></section>
+<section><section id="技術知識と-政治の程よいバランスを-smart-aleckからgo-getterへ" class="titleslide slide level1"><h1>技術・知識と<br>政治の程よいバランスを<br>~smart aleckからgo-getterへ~</h1></section><section id="イシューは人それぞれ違う" class="slide level2">
+<h2>イシューは人それぞれ違う</h2>
+<p>技術的、知識的正しさも、<br />
+そのイシュー（課題認識）を持たない人には伝わらない</p>
+<h3 id="大切なのは意思決定者偉い人が-うんと言える状態に持っていくこと">大切なのは、意思決定者（偉い人）が<br>「うん」と言える状態に持っていくこと</h3>
+<p>そのプロセスで<br>データ分析だろうと勘だろうと情に訴えようと、<br> 何を使ったってよい！<br> 　┗<font color = red>やりすぎて元の目的を忘れないよう注意</font></p>
+</section><section id="イシューを揃えるプロセスのお供に" class="slide level2">
+<h2>イシューを揃えるプロセスのお供に</h2>
+<p>分析は現場との信頼関係と適切な距離感が重要。</p>
+<p>「意識高い系」を演出してみるのはどうでしょう？<br />
+┗難しい言葉で知ったかぶり（smart aleck）になるより、<br />
+　やり手キャラ（go-getter）を演じよう。</p>
+<aside class="notes">
+ちなみにgo-getter、smart aleckは「意識高い系　英語」でググりました。それ以上のことはわかりません！
+</aside>
+</section><section id="傍らにはggplotを" class="slide level2">
+<h2>傍らにはggplotを</h2>
+<p>ggplot はとても自由で、応用が非常にやりやすい<br />
+「見せ方」「言い方」を整えて、「やり手」になろう！</p>
+</section><section id="section" class="slide level2" data-background="img/maxeIMGL8770.jpg">
+<h2>.</h2>
+<h4 id="enjoy"><br><br><br><br> Enjoy!</h4>
+<p><font size=4><a href="//www.pakutaso.com" title="フリー写真素材ぱくたそ" target="_blank">フリー写真素材ぱくたそ </a></p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="gogetters_plot_files/reveal.js-3.3.0.1/lib/js/head.min.js"></script>
+  <script src="gogetters_plot_files/reveal.js-3.3.0.1/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        menu: {
+          custom: false,
+          themes: false,
+          transitions: false
+        },
+
+
+
+        chalkboard: {
+          toggleNotesButton: true,
+          theme: 'whiteboard',
+        },
+
+        keyboard: {
+          67: function() { RevealChalkboard.toggleNotesCanvas() },    // toggle notes canvas when 'c' is pressed
+          66: function() { RevealChalkboard.toggleChalkboard() }, // toggle chalkboard when 'b' is pressed
+          46: function() { RevealChalkboard.clear() },    // clear chalkboard when 'DEL' is pressed
+           8: function() { RevealChalkboard.reset() },    // reset chalkboard data on current slide when 'BACKSPACE' is pressed
+          68: function() { RevealChalkboard.download() }, // downlad recorded chalkboard drawing when 'd' is pressed
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'gogetters_plot_files/reveal.js-3.3.0.1/plugin/notes/notes.js', async: true },
+          { src: 'gogetters_plot_files/reveal.js-3.3.0.1/plugin/chalkboard/chalkboard.js', async: true },
+          { src: 'gogetters_plot_files/reveal.js-3.3.0.1/plugin/menu/menu.js', async: true },
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>

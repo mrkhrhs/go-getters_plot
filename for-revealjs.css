@@ -1,0 +1,168 @@
+/* for {revealjs} */
+
+/* slide setting */
+.reveal .progress {
+  height: 15px;
+  margin-bottom: 5px;
+}
+
+/* slide font setting */
+
+.reveal h1 {
+  color: #000099;
+  margin: 50px 0px;
+}
+.reveal h2{
+  font-weight: bold;
+}
+.reveal h3 {
+  color: #018227;
+  font-weight: bold;
+}
+.reveal h4 {
+  color: #018227;
+  font-weight: bold;
+  margin: 100px 0px;
+  font-size: 70px;
+  text-align:center;
+}
+.reveal h5,
+.reveal h6 {
+  text-transform: none;
+}
+
+/*　編集の仕方：
+　　・カンマで同じ処理する
+　　・オブジェクトに続いて中カッコ内に設定内容を書く
+.reveal h1{
+  font-size: 2em}
+*/
+
+.reveal .slide {
+  text-align:left;
+}
+
+/* slide-title setting */
+
+/*.reveal section.slide>h1 {
+  color: #000099;
+}
+.reveal section.slide>h3 {
+  color: #018227;
+}
+  margin-top: 15%;
+} span.header-section-number {
+  margin-right: 0.5em;
+}
+*/
+
+.reveal li {
+  margin-top:0.2em;
+}
+.reveal ul ul li {
+  font-size:0.85em;
+  margin-top:0;
+}
+
+/* image setting */
+.reveal img {
+  max-height: 550px;
+  max-width:1500px;
+  border-style: none;
+}
+
+.reveal .slides img {
+  max-height: 550px;
+  max-width:1500px;
+  border-style: none;
+  display:block;
+  margin-left:auto; 
+  margin-right:auto; 
+}
+
+.reveal .slides section .column1 img {
+  max-height: 550px;
+  border-style: none;
+}
+
+.reveal .slides section .column2 img {
+  max-height: 550px;
+  border-style: none;
+}
+
+/* table setting */
+.reveal table{
+  border-style: solid;
+}
+.reveal table th {
+  border-style: solid;
+}
+.reveal table td {
+  border-style: solid;
+}
+
+/* column setting */
+.reveal .slides section .no-column {
+  width: 96%;
+}
+.reveal .slides section .column1 {
+  float: left;
+  width: 48%;
+}
+
+.reveal .slides section .column2 {
+  float: right;
+  width: 48%;
+}
+
+/* for htmlwidgets to iframe */
+.reveal .slides iframe {
+	height: 450px;
+	width: 100%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+/* slide-header setting */
+#slide-header {
+  text-align: right;
+  background-color: #000099;
+  opacity: 1;
+}
+
+/*#slide-header img {
+  max-height: 50px;
+  margin: 3px 10px;
+  vertical-align: middle;
+  opacity: 1.0;
+}*/
+
+
+#slide-header p {
+  font-size: 15px;
+  padding: 1px 20px 2px;
+  margin:  70px 10px 2px;
+}
+
+/* botsu */
+/*
+.reveal .slides section .column {
+   position: fixed;
+   width: 48%;
+   top: 3em;
+   bottom: 0;
+}
+.reveal .slides section .column1 {
+   left:  0;
+}
+.reveal .slides section .column2 {
+   right: 0;
+}
+*/
+
+/* other */
+/*
+.section .reveal .state-background {
+  background: #002b36;
+}
+*/
